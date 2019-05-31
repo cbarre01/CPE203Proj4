@@ -2,10 +2,12 @@ import processing.core.PImage;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.*;
 
 public class MinerFull extends Moving {
 
     private int resourceLimit;
+    private PathingStrategy pathing = new SingleStepPathingStrategy();
 
     public MinerFull(String id, Point position,
                      List<PImage> images, int resourceLimit,
@@ -70,7 +72,36 @@ public class MinerFull extends Moving {
         miner.scheduleActions(scheduler, world, imageStore);
     }
 
+    public Point nextPosition(WorldModel world,
+                              Point destPos) {
+        Predicate<Point> canPassThrough = new Predicate<Point>()
+        {
+            public boolean test(Point p)
+            {
+                Optional<Entity> occupant = world.getOccupant(p);
+                if (occupant != null)
+                {
+                    return true;
+                }
+                return false;
 
+            }
+        };
+
+        BiPredicate<Point, Point> withinReach = new BiPredicate<Point, Point>() {
+            @Override
+            public boolean test(Point point, Point point2) {
+                return false;
+            }
+        };
+
+
+        List<Point> path = pathing.computePath(getPosition(), destPos, canPassThrough,withinReach, PathingStrategy.CARDINAL_NEIGHBORS);
+        Point newPos = path.get(0);
+        return newPos;
+    }
+
+/*
     public Point nextPosition(WorldModel world,
                                Point destPos) {
         int horiz = Integer.signum(destPos.getX() - getPosition().getX());
@@ -89,7 +120,7 @@ public class MinerFull extends Moving {
 
         return newPos;
     }
-
+*/
     public static MinerNotFull createMinerNotFull(String id, int resourceLimit,
                                                   Point position, int actionPeriod, int animationPeriod,
                                                   List<PImage> images)
