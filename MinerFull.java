@@ -90,8 +90,6 @@ public class MinerFull extends Moving {
         return newPos;
     }
 
-    Public Point
-
     public static MinerNotFull createMinerNotFull(String id, int resourceLimit,
                                                   Point position, int actionPeriod, int animationPeriod,
                                                   List<PImage> images)
