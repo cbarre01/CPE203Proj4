@@ -78,12 +78,11 @@ public class MinerFull extends Moving {
         {
             public boolean test(Point p)
             {
-                Optional<Entity> occupant = world.getOccupant(p);
-                if (occupant != null)
+                if (world.isOccupied(p))
                 {
-                    return true;
+                    return false;
                 }
-                return false;
+                return true;
 
             }
         };
@@ -97,7 +96,11 @@ public class MinerFull extends Moving {
 
 
         List<Point> path = pathing.computePath(getPosition(), destPos, canPassThrough,withinReach, PathingStrategy.CARDINAL_NEIGHBORS);
-        Point newPos = path.get(0);
+        Point newPos = getPosition();
+        if (path.size() > 0)
+        {
+            newPos = path.get(0);
+        }
         return newPos;
     }
 
