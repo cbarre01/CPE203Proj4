@@ -45,6 +45,7 @@ public class OreBlob extends Moving {
         scheduler.scheduleEvent(this,
                 createActivityAction(world, imageStore),
                 nextPeriod);
+        //System.out.println("Blob: " + getPosition());
     }
 
     public boolean moveTo(WorldModel world,
@@ -96,6 +97,7 @@ public class OreBlob extends Moving {
         {
             newPos = path.get(0);
         }
+        //System.out.println("Next pos: " + newPos);
         return newPos;
     }
 

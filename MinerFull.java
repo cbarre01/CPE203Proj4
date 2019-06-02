@@ -38,6 +38,7 @@ public class MinerFull extends Moving {
                     createActivityAction(world, imageStore),
                     this.getActionPeriod());
         }
+        //System.out.println("MinerF: " + getPosition());
     }
 
     public boolean moveTo(WorldModel world,
@@ -75,6 +76,7 @@ public class MinerFull extends Moving {
 
     public Point nextPosition(WorldModel world,
                               Point destPos) {
+        //System.out.println("enter nextPos, dest" + destPos);
         Predicate<Point> canPassThrough = new Predicate<Point>()
         {
             public boolean test(Point p)
@@ -100,6 +102,7 @@ public class MinerFull extends Moving {
         {
             newPos = path.get(0);
         }
+        //System.out.println("Exit Next pos: " + newPos);
         return newPos;
     }
 

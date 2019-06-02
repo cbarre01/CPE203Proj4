@@ -301,6 +301,7 @@ final class WorldModel
          setOccupancyCell(pos, entity);
          entity.setPosition(pos);
       }
+      //System.out.println("Moving entity: " + entity + " to position: " + pos);
    }
 
    private void setOccupancyCell(Point pos,

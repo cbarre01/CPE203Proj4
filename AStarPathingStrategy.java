@@ -33,8 +33,7 @@ class AStarPathingStrategy
         openList.add(startNode);
 
 
-
-        while (!current.getPoint().adjacent(end))
+        while (!current.getPoint().adjacent(end) && closedList.size() < 100)
         {
             //3. Analyze all valid adjacent nodes that are not on the closed list
             List<Point> neighbors = potentialNeighbors.apply(current.getPoint())
@@ -117,14 +116,13 @@ class AStarPathingStrategy
             }
             current = smallestF;
 
-
         }
         while (!current.getPoint().equals(start))
         {
             path.add(current.getPoint());
             current = current.getPrior();
+            //System.out.println(path);
         }
-        System.out.println("Returning path");
         Collections.reverse(path);
         return path;
 

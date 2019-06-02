@@ -37,11 +37,13 @@ public class MinerNotFull extends Moving {
                     createActivityAction(world, imageStore),
                     getActionPeriod());
         }
+       // System.out.println("MinerNF: " + getPosition());
     }
 
 
     public boolean moveTo(WorldModel world,
                            Entity target, EventScheduler scheduler) {
+
         if (adjacent(getPosition(), target.getPosition())) {
             resourceCount += 1;
             world.removeEntity(target);
@@ -49,6 +51,7 @@ public class MinerNotFull extends Moving {
 
             return true;
         } else {
+
             Point nextPos = nextPosition(world, target.getPosition());
 
             if (!getPosition().equals(nextPos)) {
@@ -61,6 +64,7 @@ public class MinerNotFull extends Moving {
             }
             return false;
         }
+
     }
 
     private boolean transformNotFull(WorldModel world,
@@ -84,6 +88,8 @@ public class MinerNotFull extends Moving {
 
     public Point nextPosition(WorldModel world,
                               Point destPos) {
+        //System.out.println("enter nextPos, position: " + getPosition() + ",dest: " + destPos);
+
         Predicate<Point> canPassThrough = new Predicate<Point>()
         {
             public boolean test(Point p)
@@ -96,19 +102,21 @@ public class MinerNotFull extends Moving {
 
             }
         };
-
+        //System.out.println("enter pathing");
         List<Point> path = pathing.computePath(getPosition(),
                 destPos,
                 canPassThrough,
                 (p1, p2) -> world.neighbors(p1, p2),
                 PathingStrategy.CARDINAL_NEIGHBORS);
 
+        //System.out.println("path complete");
         Point newPos = getPosition();
 
         if (path.size() > 0)
         {
             newPos = path.get(0);
         }
+        //System.out.println(" Exit Next pos: " + newPos);
         return newPos;
     }
 
