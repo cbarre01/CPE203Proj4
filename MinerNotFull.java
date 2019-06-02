@@ -9,7 +9,8 @@ public class MinerNotFull extends Moving {
 
     private int resourceLimit;
     private int resourceCount;
-    private PathingStrategy pathing = new SingleStepPathingStrategy();
+    //private PathingStrategy pathing = new SingleStepPathingStrategy();
+    private PathingStrategy pathing = new AStarPathingStrategy();
 
     public MinerNotFull(String id, Point position,
                   List<PImage> images, int resourceLimit, int resourceCount,
@@ -96,16 +97,14 @@ public class MinerNotFull extends Moving {
             }
         };
 
-        BiPredicate<Point, Point> withinReach = new BiPredicate<Point, Point>() {
-            @Override
-            public boolean test(Point point, Point point2) {
-                return false;
-            }
-        };
+        List<Point> path = pathing.computePath(getPosition(),
+                destPos,
+                canPassThrough,
+                (p1, p2) -> world.neighbors(p1, p2),
+                PathingStrategy.CARDINAL_NEIGHBORS);
 
-
-        List<Point> path = pathing.computePath(getPosition(), destPos, canPassThrough,withinReach, PathingStrategy.CARDINAL_NEIGHBORS);
         Point newPos = getPosition();
+
         if (path.size() > 0)
         {
             newPos = path.get(0);

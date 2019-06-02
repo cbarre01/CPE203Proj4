@@ -1,13 +1,16 @@
 import processing.core.PImage;
 
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class OreBlob extends Moving {
     private static final String QUAKE_KEY = "quake";
     private static final String QUAKE_ID = "quake";
     private static final int QUAKE_ACTION_PERIOD = 1100;
     private static final int QUAKE_ANIMATION_PERIOD = 100;
-
+    //private PathingStrategy pathing = new SingleStepPathingStrategy();
+    private PathingStrategy pathing = new AStarPathingStrategy();
 
 
 
@@ -67,31 +70,42 @@ public class OreBlob extends Moving {
 
     public Point nextPosition(WorldModel world,
                               Point destPos) {
-        int horiz = Integer.signum(destPos.getX() - getPosition().getX());
-        Point newPos = new Point(getPosition().getX() + horiz,
-                getPosition().getY());
+        Predicate<Point> canPassThrough = new Predicate<Point>()
+        {
+            public boolean test(Point p)
+            {
+                Optional<Entity> occupant = world.getOccupant(p);
+                if (occupant.isPresent() && !(occupant.get() instanceof Ore))
+                {
+                    return false;
+                }
+                return true;
 
-        Optional<Entity> occupant = world.getOccupant(newPos);
-
-        if (horiz == 0 ||
-                (occupant.isPresent() && !(occupant.get() instanceof Ore))) {
-            int vert = Integer.signum(destPos.getY() - getPosition().getY());
-            newPos = new Point(getPosition().getX(), getPosition().getY() + vert);
-            occupant = world.getOccupant(newPos);
-
-            if (vert == 0 ||
-                    (occupant.isPresent() && !(occupant.get() instanceof Ore))) {
-                newPos = getPosition();
             }
-        }
+        };
 
+        List<Point> path = pathing.computePath(getPosition(),
+                destPos,
+                canPassThrough,
+                (p1, p2) -> world.neighbors(p1, p2),
+                PathingStrategy.CARDINAL_NEIGHBORS);
+
+        Point newPos = getPosition();
+
+        if (path.size() > 0)
+        {
+            newPos = path.get(0);
+        }
         return newPos;
     }
+
 
     private Quake createQuake(Point position, List<PImage> images) {
         return new Quake(position, images,
                 QUAKE_ACTION_PERIOD, QUAKE_ANIMATION_PERIOD);
     }
+
+
 
 
 

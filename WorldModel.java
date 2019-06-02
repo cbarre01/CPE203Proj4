@@ -211,7 +211,7 @@ final class WorldModel
       return Optional.empty();
    }
 
-   private boolean withinBounds(Point pos)
+   public boolean withinBounds(Point pos)
    {
       return pos.getY() >= 0 && pos.getY() < getNumRows() &&
               pos.getX() >= 0 && pos.getX() < getNumCols();
@@ -412,5 +412,57 @@ final class WorldModel
    public Set<Entity> getEntities() {
       return entities;
    }
+
+/*
+   public boolean reachableBFS(Point p1, Point p2)
+   {
+      boolean[][] visitedD = new boolean[numRows][numCols];
+      Queue<Point> toVisit = new LinkedList<>();
+      boolean found = false;
+
+      ArrayList<Point> neighbors = new ArrayList<>();
+      neighbors.add(new Point(p1.getX() - 1, p1.getY()));
+      neighbors.add(new Point(p1.getX() + 1, p1.getY()));
+      neighbors.add(new Point(p1.getX(), p1.getY() - 1));
+      neighbors.add(new Point(p1.getX(), p1.getY() + 1));
+      for (Point p : neighbors)
+      {
+         if (withinBounds(p) && !visitedD[p.getX()][p.getY()])
+         {
+            toVisit.add(p);
+         }
+      }
+      while ((toVisit.size() > 0) && (found = false))
+      {
+         Point cur = toVisit.remove();
+         if (cur.equals(p2))
+         {
+            found = true;
+         }
+         else {
+            ArrayList<Point> neighbors1 = new ArrayList<>();
+            neighbors1.add(new Point(p1.getX() - 1, p1.getY()));
+            neighbors1.add(new Point(p1.getX() + 1, p1.getY()));
+            neighbors1.add(new Point(p1.getX(), p1.getY() - 1));
+            neighbors1.add(new Point(p1.getX(), p1.getY() + 1));
+            for (Point p : neighbors1) {
+               if (withinBounds(p) && !visitedD[p.getX()][p.getY()]) {
+                  toVisit.add(p);
+               }
+            }
+         }
+         visitedD[cur.getX()][cur.getY()] = true;
+      }
+      return found;
+*/
+public boolean neighbors(Point p1, Point p2)
+{
+   return p1.getX()+1 == p2.getX() && p1.getY() == p2.getY() ||
+           p1.getX()-1 == p2.getX() && p1.getY() == p2.getY() ||
+           p1.getX() == p2.getX() && p1.getY()+1 == p2.getY() ||
+           p1.getX() == p2.getX() && p1.getY()-1 == p2.getY();
+}
+
+
 
 }
